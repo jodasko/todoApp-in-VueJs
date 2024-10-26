@@ -6,27 +6,27 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script lang="ts" setup>
+/**
+ * There is no need to import defineEmits since they are already globally available when using
+ * `<script setup>`.
+ * Avoid importing defineEmits in <script setup>.
+ * It’s a best practice for clean, concise, and consistent Vue code.
+ */
+import { ref } from "vue";
 
-export default defineComponent({
-  emits: ["add-todo"],
-  setup(_, { emit }) {
-    const newTodoText = ref("");
+const emit = defineEmits<{ (event: "add-todo", newTodoText: string): void }>();
 
-    const handleAddTodo = () => {
-      if (newTodoText.value.trim()) {
-        emit("add-todo", newTodoText.value); //emit the new todo text
-        newTodoText.value = ""; //Clear the input
-      }
-    };
+// Reactive state for input text
+const newTodoText = ref("");
 
-    return {
-      newTodoText,
-      handleAddTodo,
-    };
-  },
-});
+// Function to emit the new todo text
+const handleAddTodo = () => {
+  if (newTodoText.value.trim()) {
+    emit("add-todo", newTodoText.value); //emit the new todo text
+    newTodoText.value = ""; //Clear the input
+  }
+};
 </script>
 
 <style scoped>

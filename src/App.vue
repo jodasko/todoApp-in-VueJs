@@ -1,6 +1,7 @@
 <template>
   <div class="todo-container">
     <h1>Vue 3 Todo App</h1>
+    <h3>Using Composition API inside Single-File Components (SFCs)</h3>
     <TodoInput @add-todo="addTodo" />
     <TodoList
       :todoList="todos"
@@ -10,45 +11,31 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ref } from "vue";
 import { Todo } from "./types/Todo";
+import { TodoInput, TodoList } from "./components";
 
-import TodoInput from "./components/TodoInput.vue";
-import TodoList from "./components/TodoList.vue";
+const todos = ref<Todo[]>([]);
 
-export default {
-  components: { TodoInput, TodoList },
-  setup() {
-    const todos = ref<Todo[]>([]);
+const addTodo = (text: string) => {
+  const newTodo: Todo = {
+    id: Date.now(),
+    text,
+    completed: false,
+  };
+  todos.value.push(newTodo);
+};
 
-    const addTodo = (text: string) => {
-      const newTodo: Todo = {
-        id: Date.now(),
-        text,
-        completed: false,
-      };
-      todos.value.push(newTodo);
-    };
+const toggleTodo = (id: number) => {
+  const todo = todos.value.find((todo) => todo.id === id);
+  if (todo) {
+    todo.completed = !todo.completed;
+  }
+};
 
-    const toggleTodo = (id: number) => {
-      const todo = todos.value.find((todo) => todo.id === id);
-      if (todo) {
-        todo.completed = !todo.completed;
-      }
-    };
-
-    const removeTodo = (id: number) => {
-      todos.value = todos.value.filter((todo) => todo.id !== id);
-    };
-
-    return {
-      todos,
-      addTodo,
-      toggleTodo,
-      removeTodo,
-    };
-  },
+const removeTodo = (id: number) => {
+  todos.value = todos.value.filter((todo) => todo.id !== id);
 };
 </script>
 

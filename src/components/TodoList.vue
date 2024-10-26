@@ -11,25 +11,30 @@
   </ul>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script lang="ts" setup>
+/**
+ * There is no need to import defineEmits since they are already globally available when using
+ * `<script setup>`. Nevertheless I leave it for learning proposal
+ * Avoid importing defineEmits in <script setup>.
+ * It’s a best practice for clean, concise, and consistent Vue code.
+ */
+import { defineProps, defineEmits } from "vue";
 import { Todo } from "../types/Todo";
 
-export default defineComponent({
-  props: {
-    todoList: {
-      type: Array as PropType<Todo[]>,
-      required: true,
-    },
-  },
-  emits: ["toggle-todo", "remove-todo", "vaina"],
-  setup(_, { emit }) {
-    const toggleTodo = (id: number) => emit("toggle-todo", id);
-    const removeTodo = (id: number) => emit("remove-todo", id);
+// Define props and types
+const props = defineProps<{
+  todoList: Todo[];
+}>();
 
-    return { toggleTodo, removeTodo };
-  },
-});
+// Define Emit method
+const emit = defineEmits<{
+  (e: "toggle-todo", id: number): void;
+  (e: "remove-todo", id: number): void;
+}>();
+
+// Emit functions
+const toggleTodo = (id: number) => emit("toggle-todo", id);
+const removeTodo = (id: number) => emit("remove-todo", id);
 </script>
 
 <style scoped>
